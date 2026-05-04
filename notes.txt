@@ -1,0 +1,20 @@
+i want a website with a palette of a white background and a black accent
+
+the navbar:
+in the left the icon bars for menu button on the right the media list(facebook, twitter, insta)
+
+the hero section:
+a title, a description, and a cta button on the left
+on the right the image
+
+the menus:
+on the right vertically aligned menus home, prices, products, about us
+they are really rotate 90deg, and there is a bottom line for the active menu
+
+animations:
+
+when switching to another menu (home->prices) there should be an animation of rotation, 
+or a fade in animation to make it more modern
+
+make a modern design corresponding to the description above, with a smooth and great UI/UX
+use reactjs tailwindcss and gsap for these

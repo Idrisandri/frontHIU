@@ -1,0 +1,4 @@
+// NestJS — POST /api/auth/login
+// Retourne { access_token: string }
+// ou 401 avec { message: "Invalid credentials" }
+// Côté NestJS tu n'as qu'à créer le endpoint POST /api/auth/register avec un DTO CreateUserDto et tout se branche sans toucher au frontend.
