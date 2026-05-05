@@ -1,28 +1,37 @@
 // pages/Register.jsx
-import { useRegisterForm }  from '../hooks/useRegisterForm'
-import { registerRequest }  from '../services/auth.service'
-import { Field }            from '../components/Field'
-import { getStrength }      from '../utils/passwordStrength'
+import { useRegisterForm } from '../hooks/useRegisterForm'
+import { register } from '../services/authService'
+import { Field } from '../components/Field'
+import { getStrength } from '../utils/passwordStrength'
 
 const STEPS = [
-  ['Create your account',   'Takes less than 2 minutes.'],
+  ['Create your account', 'Takes less than 2 minutes.'],
   ['Set up your workspace', 'Add your team and first project.'],
-  ['Start collaborating',   'Invite clients and ship faster.'],
+  ['Start collaborating', 'Invite clients and ship faster.'],
 ]
 
+// const ROLES = [
+//   { value: 'designer', label: 'Designer' },
+//   { value: 'developer', label: 'Developer' },
+//   { value: 'pm', label: 'Product Manager' },
+//   { value: 'founder', label: 'Founder / Executive' },
+//   { value: 'other', label: 'Other' },
+// ]
+
 const ROLES = [
-  { value: 'designer',   label: 'Designer' },
-  { value: 'developer',  label: 'Developer' },
-  { value: 'pm',         label: 'Product Manager' },
-  { value: 'founder',    label: 'Founder / Executive' },
-  { value: 'other',      label: 'Other' },
+  { value: 'USER', label: 'User' },
+  { value: 'ADMIN', label: 'Administrator' },
 ]
 
 export default function Register({ navigate }) {
   const { values, errors, loading, handleChange, handleSubmit } = useRegisterForm(
     async (vals) => {
-      await registerRequest(vals)
-      navigate('dashboard')
+      const data = await register(vals)
+      if (data && data.access_token) {
+        localStorage.setItem('token', data.access_token)
+        localStorage.setItem('user', JSON.stringify(data.user))
+        navigate('home')
+      }
     }
   )
 
@@ -75,13 +84,17 @@ export default function Register({ navigate }) {
 
         {/* Name row */}
         <div className="grid grid-cols-2 gap-5">
-          <Field name="firstName" placeholder="First name"
+          <Field name="name" placeholder="First name"
             autoComplete="given-name"
-            value={values.firstName} onChange={handleChange} error={errors.firstName} />
-          <Field name="lastName" placeholder="Last name"
+            value={values.name} onChange={handleChange} error={errors.name} />
+          <Field name="lastname" placeholder="Last name"
             autoComplete="family-name"
-            value={values.lastName} onChange={handleChange} error={errors.lastName} />
+            value={values.lastname} onChange={handleChange} error={errors.lastname} />
         </div>
+
+        <Field name="username" placeholder="Username"
+          autoComplete="username"
+          value={values.username} onChange={handleChange} error={errors.username} />
 
         <Field type="email" name="email" placeholder="Email address"
           autoComplete="email"
@@ -112,13 +125,12 @@ export default function Register({ navigate }) {
             <div className="mt-2">
               <div className="flex gap-1">
                 {[1, 2, 3, 4].map(n => (
-                  <div key={n} className={`h-[2px] flex-1 rounded transition-colors ${
-                    n <= strength.score
-                      ? strength.score <= 1 ? 'bg-red-500'
-                        : strength.score === 2 ? 'bg-orange-400'
+                  <div key={n} className={`h-[2px] flex-1 rounded transition-colors ${n <= strength.score
+                    ? strength.score <= 1 ? 'bg-red-500'
+                      : strength.score === 2 ? 'bg-orange-400'
                         : 'bg-green-500'
-                      : 'bg-black/10'
-                  }`} />
+                    : 'bg-black/10'
+                    }`} />
                 ))}
               </div>
               <p className={`text-[0.62rem] mt-1 ${strength.color}`}>{strength.label}</p>

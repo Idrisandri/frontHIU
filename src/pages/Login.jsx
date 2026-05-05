@@ -1,15 +1,19 @@
 // pages/Login.jsx
 import { useLoginForm } from '../hooks/useLoginForm'
-import { loginRequest }  from '../services/auth.service'
-import { Field }         from '../components/Field'
+import { login } from '../services/authService'
+import { Field } from '../components/Field'
 
 const STATS = [['120+', 'Projects'], ['8yr', 'Experience'], ['40+', 'Awards']]
 
 export default function Login({ navigate }) {
   const { values, errors, loading, handleChange, handleSubmit } = useLoginForm(
     async (vals) => {
-      await loginRequest(vals)
-      navigate('dashboard')
+      const data = await login(vals.email, vals.password)
+      if (data && data.access_token) {
+        localStorage.setItem('token', data.access_token)
+        localStorage.setItem('user', JSON.stringify(data.user))
+        navigate('home')
+      }
     }
   )
 
@@ -56,13 +60,13 @@ export default function Login({ navigate }) {
 
         <div className="flex flex-col gap-5">
           <Field
-            type="email"        name="email"
+            type="email" name="email"
             placeholder="Email address"
             autoComplete="email"
             value={values.email} onChange={handleChange} error={errors.email}
           />
           <Field
-            type="password"     name="password"
+            type="password" name="password"
             placeholder="Password"
             autoComplete="current-password"
             value={values.password} onChange={handleChange} error={errors.password}

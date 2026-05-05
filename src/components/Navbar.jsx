@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 
 const socialLinks = [
@@ -34,7 +34,19 @@ const socialLinks = [
 ]
 
 export default function Navbar({ menuOpen, setMenuOpen, navigate, activePage }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'))
   const navRef = useRef(null)
+
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem('token'))
+  }, [activePage])
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    setIsLoggedIn(false)
+    navigate('login')
+  }
 
   useEffect(() => {
     gsap.fromTo(
@@ -87,9 +99,35 @@ export default function Navbar({ menuOpen, setMenuOpen, navigate, activePage }) 
             {s.icon}
           </a>
         ))}
-        <button onClick={() => navigate('login')} className="font-body text-xs tracking-widest uppercase border border-black/20 px-4 py-2 hover:bg-black hover:text-white transition-all duration-200">
-    Login
-  </button>
+        {isLoggedIn ? (
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 group cursor-pointer">
+              <div className="relative">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-black/40 group-hover:text-black transition-colors duration-300">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full border-2 border-white" />
+              </div>
+              <span className="font-body text-[10px] text-black/40 uppercase tracking-[0.2em] group-hover:text-black transition-colors duration-300">
+                {JSON.parse(localStorage.getItem('user') || '{}').name || JSON.parse(localStorage.getItem('user') || '{}').email}
+              </span>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="font-body text-[10px] tracking-widest uppercase text-black/30 hover:text-red-500 transition-colors duration-300"
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => navigate('login')}
+            className="font-body text-xs tracking-widest uppercase border border-black/20 px-4 py-2 hover:bg-black hover:text-white transition-all duration-200"
+          >
+            Login
+          </button>
+        )}
       </div>
     </nav>
   )

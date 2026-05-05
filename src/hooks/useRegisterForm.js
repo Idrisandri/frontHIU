@@ -1,22 +1,23 @@
 // hooks/useRegisterForm.js
 import { useState } from 'react'
 
-const INITIAL = { firstName: '', lastName: '', email: '', role: '', password: '', confirmPassword: '', terms: false }
+const INITIAL = { name: '', lastname: '', username: '', email: '', role: '', password: '', confirmPassword: '', terms: false }
 
 export function useRegisterForm(onSubmit) {
-  const [values, setValues]   = useState(INITIAL)
-  const [errors, setErrors]   = useState({})
+  const [values, setValues] = useState(INITIAL)
+  const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
 
-  function validate({ firstName, lastName, email, role, password, confirmPassword, terms }) {
+  function validate({ name, lastname, username, email, role, password, confirmPassword, terms }) {
     const e = {}
-    if (!firstName.trim())                            e.firstName       = 'Required.'
-    if (!lastName.trim())                             e.lastName        = 'Required.'
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))   e.email           = 'Please enter a valid email address.'
-    if (!role)                                        e.role            = 'Please select your role.'
-    if (password.length < 8)                          e.password        = 'Must be at least 8 characters.'
-    if (confirmPassword !== password)                 e.confirmPassword = 'Passwords do not match.'
-    if (!terms)                                       e.terms           = 'You must accept the Terms of Service.'
+    if (!name.trim()) e.name = 'Required.'
+    if (!lastname.trim()) e.lastname = 'Required.'
+    if (!username.trim()) e.username = 'Required.'
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = 'Please enter a valid email address.'
+    if (!role) e.role = 'Please select your role.'
+    if (password.length < 8) e.password = 'Must be at least 8 characters.'
+    if (confirmPassword !== password) e.confirmPassword = 'Passwords do not match.'
+    if (!terms) e.terms = 'You must accept the Terms of Service.'
     return e
   }
 

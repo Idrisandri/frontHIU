@@ -14,7 +14,7 @@ const pages = {
   prices: Prices,
   products: Products,
   about: AboutUs,
-  login: Login, 
+  login: Login,
   register: Register,
 }
 
@@ -95,9 +95,8 @@ export default function App() {
           <button
             key={page}
             onClick={() => navigate(page)}
-            className={`font-display text-4xl font-bold tracking-tight transition-colors duration-200 ${
-              activePage === page ? 'text-white' : 'text-white/40 hover:text-white/70'
-            }`}
+            className={`font-display text-4xl font-bold tracking-tight transition-colors duration-200 ${activePage === page ? 'text-white' : 'text-white/40 hover:text-white/70'
+              }`}
           >
             {page === 'about' ? 'About Us' : page.charAt(0).toUpperCase() + page.slice(1)}
           </button>
